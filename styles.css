@@ -1,0 +1,223 @@
+﻿:root {
+  --bg: #ecf4ff;
+  --panel: #fdfdfd;
+  --ink: #16212f;
+  --muted: #5a6a7e;
+  --lane: #d5e5ff;
+  --lane-mid: #8cb4ff;
+  --accent: #1f5dff;
+  --danger: #c53030;
+  --ok: #0f9d58;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 16px;
+  display: grid;
+  place-items: center;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 10%, #ffffff 0%, transparent 35%),
+    linear-gradient(165deg, #d2e7ff 0%, #f9fcff 45%, #ffd9b8 100%);
+}
+
+.app {
+  width: min(100%, 520px);
+  background: var(--panel);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 22px 56px rgba(16, 48, 99, 0.22);
+  position: relative;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 6px 0 2px;
+  font-size: clamp(1.7rem, 6vw, 2.6rem);
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+}
+
+.hud {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hud p {
+  margin: 0;
+  border-radius: 12px;
+  padding: 8px;
+  background: #f4f8ff;
+  display: grid;
+  gap: 4px;
+}
+
+.hud span {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.hud strong {
+  font-size: 1.12rem;
+}
+
+.arena-wrap {
+  margin-top: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #d5e5ff;
+}
+
+.arena {
+  position: relative;
+  height: 420px;
+  background: linear-gradient(180deg, #f6fbff 0%, #dfecff 100%);
+}
+
+.lane-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.lane-grid span {
+  border-left: 1px solid rgba(22, 33, 47, 0.12);
+}
+
+.lane-grid span:first-child {
+  border-left: none;
+}
+
+.player,
+.hazard {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  left: 50%;
+  margin-left: -28px;
+  border-radius: 14px;
+}
+
+.player {
+  bottom: 16px;
+  background: linear-gradient(145deg, #2f6dff, #184fd3);
+  box-shadow: 0 10px 24px rgba(21, 73, 204, 0.44);
+}
+
+.hazard {
+  top: -60px;
+  background: linear-gradient(145deg, #ff8356, #e14828);
+  box-shadow: 0 8px 20px rgba(217, 64, 20, 0.35);
+}
+
+.controls {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 14px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.hint {
+  margin: 10px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 32, 56, 0.74);
+  border-radius: 22px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 14px;
+}
+
+.result-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.65rem;
+}
+
+.result-reason {
+  margin: 0;
+  color: #edf3ff;
+}
+
+.overlay button {
+  background: #fff;
+  color: var(--ink);
+}
+
+.repo-link-wrap {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+.repo-link {
+  color: #1f5dff;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.state-ready {
+  color: #a36200;
+}
+
+.state-live {
+  color: var(--ok);
+}
+
+.state-over {
+  color: var(--danger);
+}
+
+@media (max-width: 480px) {
+  .arena {
+    height: 360px;
+  }
+
+  .player,
+  .hazard {
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+  }
+}

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lane Flip Sprint</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="top">
+        <p class="eyebrow">ONIGAME BIRTH LANE</p>
+        <h1>Lane Flip Sprint</h1>
+        <p class="lead">Three lanes. One thumb. Survive 45 seconds.</p>
+      </header>
+
+      <section class="hud" aria-label="game status">
+        <p><span>State</span><strong id="state-label">READY</strong></p>
+        <p><span>Time</span><strong id="time-label">45.0</strong></p>
+        <p><span>Score</span><strong id="score-label">0</strong></p>
+      </section>
+
+      <section class="arena-wrap">
+        <div id="arena" class="arena" role="img" aria-label="Three-lane dodge field">
+          <div class="lane-grid" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div id="player" class="player"></div>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="lane controls">
+        <button id="left-btn" type="button">Left</button>
+        <button id="right-btn" type="button">Right</button>
+      </section>
+
+      <p id="hint" class="hint">Arrow keys, A/D, or tap buttons.</p>
+
+      <section id="overlay" class="overlay" hidden>
+        <p id="result-title" class="result-title">Game Over</p>
+        <p id="result-reason" class="result-reason">Reason: Hit by hazard</p>
+        <button id="retry-btn" type="button">Retry</button>
+      </section>
+
+      <p class="repo-link-wrap">
+        <a id="repo-link" class="repo-link" href="https://github.com/onizuka-agi-co/onigame-lane-flip-sprint" target="_blank" rel="noreferrer">GitHub Repository</a>
+      </p>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
