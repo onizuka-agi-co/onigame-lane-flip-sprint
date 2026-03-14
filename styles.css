@@ -57,7 +57,7 @@ h1 {
 .hud {
   margin-top: 14px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -77,6 +77,11 @@ h1 {
 
 .hud strong {
   font-size: 1.12rem;
+  transition: transform 120ms ease;
+}
+
+#lane-label.lane-feedback {
+  transform: scale(1.08);
 }
 
 .arena-wrap {

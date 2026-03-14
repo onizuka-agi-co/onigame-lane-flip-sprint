@@ -9,6 +9,7 @@ const resultReason = document.getElementById('result-reason');
 const stateLabel = document.getElementById('state-label');
 const timeLabel = document.getElementById('time-label');
 const scoreLabel = document.getElementById('score-label');
+const laneLabel = document.getElementById('lane-label');
 
 const laneCount = 3;
 const runSeconds = 45;
@@ -24,6 +25,7 @@ let spawnTimer = 0;
 let animationId = null;
 let hazards = [];
 let lastTs = 0;
+let laneFeedbackTimer = null;
 
 function laneCenterPx(index) {
   const laneWidth = arena.clientWidth / laneCount;
@@ -45,6 +47,7 @@ function updateHud() {
 function renderPlayer() {
   const x = laneCenterPx(laneIndex);
   playerEl.style.left = `${x}px`;
+  laneLabel.textContent = `${laneIndex + 1} / ${laneCount}`;
 }
 
 function clearHazards() {
@@ -65,7 +68,17 @@ function moveLane(delta) {
   if (state === 'OVER') {
     return;
   }
+  const previousLane = laneIndex;
   laneIndex = Math.max(0, Math.min(laneCount - 1, laneIndex + delta));
+  if (laneIndex !== previousLane) {
+    laneLabel.classList.add('lane-feedback');
+    if (laneFeedbackTimer) {
+      clearTimeout(laneFeedbackTimer);
+    }
+    laneFeedbackTimer = setTimeout(() => {
+      laneLabel.classList.remove('lane-feedback');
+    }, 120);
+  }
   renderPlayer();
 }
 
