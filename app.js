@@ -161,6 +161,7 @@ function loop(ts) {
     score = 0;
     if (readyLeft <= 0) {
       setState('LIVE');
+      showRunCue('LIVE - flip now', 950);
     }
   } else if (state === 'LIVE') {
     timeLeft = Math.max(0, timeLeft - dt);
