@@ -16,7 +16,7 @@ const laneCount = 3;
 const runSeconds = 45;
 const readySeconds = 1.2;
 const hazardSize = 56;
-const liveCueVisibleMs = 1300;
+const liveCueFallbackMs = 1800;
 
 let laneIndex = 1;
 let state = 'READY';
@@ -30,6 +30,7 @@ let lastTs = 0;
 let laneFeedbackTimer = null;
 let laneBlockedFeedbackTimer = null;
 let runCueTimer = null;
+let liveCueWaitingForFirstMove = false;
 let readyLockedCueCooldownUntil = 0;
 let stateFeedbackTimer = null;
 
@@ -46,6 +47,17 @@ function showRunCue(text, durationMs = 1300) {
     runCue.hidden = true;
     runCueTimer = null;
   }, durationMs);
+}
+
+function hideRunCue() {
+  if (!runCue) {
+    return;
+  }
+  if (runCueTimer) {
+    clearTimeout(runCueTimer);
+    runCueTimer = null;
+  }
+  runCue.hidden = true;
 }
 
 function showReadyLockedCue() {
@@ -116,6 +128,10 @@ function moveLane(delta) {
   const previousLane = laneIndex;
   laneIndex = Math.max(0, Math.min(laneCount - 1, laneIndex + delta));
   if (laneIndex !== previousLane) {
+    if (liveCueWaitingForFirstMove) {
+      liveCueWaitingForFirstMove = false;
+      hideRunCue();
+    }
     laneLabel.classList.add('lane-feedback');
     if (laneFeedbackTimer) {
       clearTimeout(laneFeedbackTimer);
@@ -162,7 +178,8 @@ function loop(ts) {
     score = 0;
     if (readyLeft <= 0) {
       setState('LIVE');
-      showRunCue('LIVE - flip now', liveCueVisibleMs);
+      liveCueWaitingForFirstMove = true;
+      showRunCue('LIVE - flip now', liveCueFallbackMs);
     }
   } else if (state === 'LIVE') {
     timeLeft = Math.max(0, timeLeft - dt);
@@ -211,6 +228,7 @@ function resetGame() {
   score = 0;
   spawnTimer = 0.35;
   lastTs = 0;
+  liveCueWaitingForFirstMove = false;
   clearHazards();
   overlay.hidden = true;
   setState('READY');
