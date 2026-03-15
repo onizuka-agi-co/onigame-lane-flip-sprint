@@ -10,6 +10,7 @@ const stateLabel = document.getElementById('state-label');
 const timeLabel = document.getElementById('time-label');
 const scoreLabel = document.getElementById('score-label');
 const laneLabel = document.getElementById('lane-label');
+const runCue = document.getElementById('run-cue');
 
 const laneCount = 3;
 const runSeconds = 45;
@@ -26,6 +27,22 @@ let animationId = null;
 let hazards = [];
 let lastTs = 0;
 let laneFeedbackTimer = null;
+let runCueTimer = null;
+
+function showRunCue(text) {
+  if (!runCue) {
+    return;
+  }
+  runCue.textContent = text;
+  runCue.hidden = false;
+  if (runCueTimer) {
+    clearTimeout(runCueTimer);
+  }
+  runCueTimer = setTimeout(() => {
+    runCue.hidden = true;
+    runCueTimer = null;
+  }, 1300);
+}
 
 function laneCenterPx(index) {
   const laneWidth = arena.clientWidth / laneCount;
@@ -160,6 +177,7 @@ function resetGame() {
   clearHazards();
   overlay.hidden = true;
   setState('READY');
+  showRunCue('New run started');
   renderPlayer();
   updateHud();
   animationId = requestAnimationFrame(loop);
