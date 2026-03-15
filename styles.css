@@ -80,6 +80,10 @@ h1 {
   transition: transform 120ms ease;
 }
 
+.hud strong.state-feedback {
+  transform: scale(1.08);
+}
+
 #lane-label.lane-feedback {
   transform: scale(1.08);
 }

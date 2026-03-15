@@ -29,8 +29,10 @@ let lastTs = 0;
 let laneFeedbackTimer = null;
 let laneBlockedFeedbackTimer = null;
 let runCueTimer = null;
+let readyLockedCueCooldownUntil = 0;
+let stateFeedbackTimer = null;
 
-function showRunCue(text) {
+function showRunCue(text, durationMs = 1300) {
   if (!runCue) {
     return;
   }
@@ -42,7 +44,26 @@ function showRunCue(text) {
   runCueTimer = setTimeout(() => {
     runCue.hidden = true;
     runCueTimer = null;
-  }, 1300);
+  }, durationMs);
+}
+
+function showReadyLockedCue() {
+  const now = performance.now();
+  if (now < readyLockedCueCooldownUntil) {
+    return;
+  }
+  readyLockedCueCooldownUntil = now + 420;
+
+  const remain = Math.max(0, readyLeft);
+  showRunCue(`Input locked - LIVE in ${remain.toFixed(1)}s`, 900);
+  stateLabel.classList.add('state-feedback');
+  if (stateFeedbackTimer) {
+    clearTimeout(stateFeedbackTimer);
+  }
+  stateFeedbackTimer = setTimeout(() => {
+    stateLabel.classList.remove('state-feedback');
+    stateFeedbackTimer = null;
+  }, 160);
 }
 
 function laneCenterPx(index) {
@@ -86,6 +107,9 @@ function moveLane(delta) {
   // Lock lane movement until the run actually starts to avoid accidental
   // pre-start drift right after retry.
   if (state !== 'LIVE') {
+    if (state === 'READY') {
+      showReadyLockedCue();
+    }
     return;
   }
   const previousLane = laneIndex;
