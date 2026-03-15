@@ -17,6 +17,7 @@ const runSeconds = 45;
 const readySeconds = 1.2;
 const hazardSize = 56;
 const liveCueFallbackMs = 1800;
+const firstSpawnDelaySeconds = 0.72;
 
 let laneIndex = 1;
 let state = 'READY';
@@ -226,7 +227,8 @@ function resetGame() {
   timeLeft = runSeconds;
   readyLeft = readySeconds;
   score = 0;
-  spawnTimer = 0.35;
+  // Give a short reaction window right after LIVE starts.
+  spawnTimer = firstSpawnDelaySeconds;
   lastTs = 0;
   liveCueWaitingForFirstMove = false;
   clearHazards();
