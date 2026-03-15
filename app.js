@@ -82,7 +82,9 @@ function spawnHazard() {
 }
 
 function moveLane(delta) {
-  if (state === 'OVER') {
+  // Lock lane movement until the run actually starts to avoid accidental
+  // pre-start drift right after retry.
+  if (state !== 'LIVE') {
     return;
   }
   const previousLane = laneIndex;
