@@ -16,6 +16,7 @@ const laneCount = 3;
 const runSeconds = 45;
 const readySeconds = 1.2;
 const hazardSize = 56;
+const liveCueVisibleMs = 1300;
 
 let laneIndex = 1;
 let state = 'READY';
@@ -161,7 +162,7 @@ function loop(ts) {
     score = 0;
     if (readyLeft <= 0) {
       setState('LIVE');
-      showRunCue('LIVE - flip now', 950);
+      showRunCue('LIVE - flip now', liveCueVisibleMs);
     }
   } else if (state === 'LIVE') {
     timeLeft = Math.max(0, timeLeft - dt);
