@@ -84,6 +84,11 @@ h1 {
   transform: scale(1.08);
 }
 
+#lane-label.lane-feedback-blocked {
+  color: #9f1239;
+  transform: scale(1.06);
+}
+
 .arena-wrap {
   margin-top: 12px;
   border-radius: 16px;

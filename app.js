@@ -27,6 +27,7 @@ let animationId = null;
 let hazards = [];
 let lastTs = 0;
 let laneFeedbackTimer = null;
+let laneBlockedFeedbackTimer = null;
 let runCueTimer = null;
 
 function showRunCue(text) {
@@ -97,6 +98,14 @@ function moveLane(delta) {
     laneFeedbackTimer = setTimeout(() => {
       laneLabel.classList.remove('lane-feedback');
     }, 120);
+  } else {
+    laneLabel.classList.add('lane-feedback-blocked');
+    if (laneBlockedFeedbackTimer) {
+      clearTimeout(laneBlockedFeedbackTimer);
+    }
+    laneBlockedFeedbackTimer = setTimeout(() => {
+      laneLabel.classList.remove('lane-feedback-blocked');
+    }, 160);
   }
   renderPlayer();
 }
