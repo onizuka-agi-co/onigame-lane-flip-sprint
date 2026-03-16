@@ -34,6 +34,7 @@ let runCueTimer = null;
 let liveCueWaitingForFirstMove = false;
 let readyLockedCueCooldownUntil = 0;
 let stateFeedbackTimer = null;
+let queuedMoveDelta = 0;
 
 function showRunCue(text, durationMs = 1300) {
   if (!runCue) {
@@ -61,7 +62,7 @@ function hideRunCue() {
   runCue.hidden = true;
 }
 
-function showReadyLockedCue() {
+function showReadyLockedCue(queuedDelta = 0) {
   const now = performance.now();
   if (now < readyLockedCueCooldownUntil) {
     return;
@@ -69,7 +70,9 @@ function showReadyLockedCue() {
   readyLockedCueCooldownUntil = now + 420;
 
   const remain = Math.max(0, readyLeft);
-  showRunCue(`Input locked - LIVE in ${remain.toFixed(1)}s`, 900);
+  const queuedText =
+    queuedDelta < 0 ? ' (queued left)' : queuedDelta > 0 ? ' (queued right)' : '';
+  showRunCue(`Input locked - LIVE in ${remain.toFixed(1)}s${queuedText}`, 900);
   stateLabel.classList.add('state-feedback');
   if (stateFeedbackTimer) {
     clearTimeout(stateFeedbackTimer);
@@ -117,15 +120,7 @@ function spawnHazard() {
   hazards.push({ lane, y: -hazardSize, speed: 180 + Math.random() * 90, el });
 }
 
-function moveLane(delta) {
-  // Lock lane movement until the run actually starts to avoid accidental
-  // pre-start drift right after retry.
-  if (state !== 'LIVE') {
-    if (state === 'READY') {
-      showReadyLockedCue();
-    }
-    return;
-  }
+function applyLaneDelta(delta) {
   const previousLane = laneIndex;
   laneIndex = Math.max(0, Math.min(laneCount - 1, laneIndex + delta));
   if (laneIndex !== previousLane) {
@@ -150,6 +145,19 @@ function moveLane(delta) {
     }, 160);
   }
   renderPlayer();
+}
+
+function moveLane(delta) {
+  // Lock lane movement until the run actually starts to avoid accidental
+  // pre-start drift right after retry.
+  if (state !== 'LIVE') {
+    if (state === 'READY') {
+      queuedMoveDelta = delta;
+      showReadyLockedCue(delta);
+    }
+    return;
+  }
+  applyLaneDelta(delta);
 }
 
 function endRun(reason, won) {
@@ -181,6 +189,10 @@ function loop(ts) {
       setState('LIVE');
       liveCueWaitingForFirstMove = true;
       showRunCue('LIVE - flip now', liveCueFallbackMs);
+      if (queuedMoveDelta !== 0) {
+        applyLaneDelta(queuedMoveDelta);
+        queuedMoveDelta = 0;
+      }
     }
   } else if (state === 'LIVE') {
     timeLeft = Math.max(0, timeLeft - dt);
@@ -231,6 +243,7 @@ function resetGame() {
   spawnTimer = firstSpawnDelaySeconds;
   lastTs = 0;
   liveCueWaitingForFirstMove = false;
+  queuedMoveDelta = 0;
   clearHazards();
   overlay.hidden = true;
   setState('READY');
