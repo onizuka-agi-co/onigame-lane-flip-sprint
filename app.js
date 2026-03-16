@@ -120,11 +120,12 @@ function spawnHazard() {
   hazards.push({ lane, y: -hazardSize, speed: 180 + Math.random() * 90, el });
 }
 
-function applyLaneDelta(delta) {
+function applyLaneDelta(delta, options = {}) {
+  const shouldClearLiveCue = options.clearLiveCue !== false;
   const previousLane = laneIndex;
   laneIndex = Math.max(0, Math.min(laneCount - 1, laneIndex + delta));
   if (laneIndex !== previousLane) {
-    if (liveCueWaitingForFirstMove) {
+    if (liveCueWaitingForFirstMove && shouldClearLiveCue) {
       liveCueWaitingForFirstMove = false;
       hideRunCue();
     }
@@ -190,7 +191,7 @@ function loop(ts) {
       liveCueWaitingForFirstMove = true;
       showRunCue('LIVE - flip now', liveCueFallbackMs);
       if (queuedMoveDelta !== 0) {
-        applyLaneDelta(queuedMoveDelta);
+        applyLaneDelta(queuedMoveDelta, { clearLiveCue: false });
         queuedMoveDelta = 0;
       }
     }
